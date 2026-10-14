@@ -1,0 +1,9 @@
+snake (0.2-1) unstable; urgency=medium
+
+  * New version 0.2.
+  * Migrate to Qt6/DTK6 with full Deepin branding.
+  * Add raccoon logo and Deepin en Español to about dialog.
+  * Add product icon and translations (8 languages).
+  * Use titlebar menu and DTK palette colors.
+
+ -- Deepin en Español <developers@deepinenespanol.org>  Wed, 12 Aug 2026 12:00:00 +0000

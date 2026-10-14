@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+
+override_dh_auto_build:
+	cmake --build build
+
+override_dh_auto_install:
+	cmake --build build --target install -- DESTDIR=$(CURDIR)/debian/snake
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build
