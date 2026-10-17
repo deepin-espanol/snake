@@ -13,13 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
 {
     setWindowTitle("Snake");
-    resize(490, 540);
-    setMinimumSize(490, 540);
-    setMaximumSize(490, 540);
 
     m_gameWidget = new GameWidget(this);
     setCentralWidget(m_gameWidget);
-    centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
 
     m_btnNuevoJuego = new QPushButton(tr("Nuevo juego"));
     m_btnNuevoJuego->setFixedHeight(30);
@@ -27,10 +23,25 @@ MainWindow::MainWindow(QWidget *parent)
     titlebar()->addWidget(m_btnNuevoJuego, Qt::AlignLeft);
 
     QMenu *menu = new QMenu(this);
+    QAction *newAction = menu->addAction(tr("Nuevo juego"));
+    newAction->setShortcut(QKeySequence("Ctrl+N"));
+    connect(newAction, &QAction::triggered, m_gameWidget, &GameWidget::nuevoJuego);
+    // La tecla P la gestiona el propio tablero
+    QAction *pauseAction = menu->addAction(tr("Pausa (P)"));
+    connect(pauseAction, &QAction::triggered, m_gameWidget, &GameWidget::alternarPausa);
+    menu->addSeparator();
     QAction *quitAction = menu->addAction(tr("Salir"));
     quitAction->setShortcut(QKeySequence("Ctrl+Q"));
     connect(quitAction, &QAction::triggered, this, &QWidget::close);
     titlebar()->setMenu(menu);
+    // Los atajos del menu de la barra de titulo solo funcionan con el menu
+    // abierto; anadirlas tambien a la ventana los activa siempre.
+    addAction(newAction);
+    addAction(quitAction);
+
+    // El tamano de la ventana incluye la barra de titulo de DTK
+    setFixedSize(m_gameWidget->width(), m_gameWidget->height() + titlebar()->sizeHint().height());
+    m_btnNuevoJuego->setFocusPolicy(Qt::NoFocus);
 
     connect(m_gameWidget, &GameWidget::juegoTerminado, this, [this](int puntos) {
         setWindowTitle(tr("Snake - Game Over (%1 pts)").arg(puntos));

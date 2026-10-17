@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QFont>
 #include <QLinearGradient>
+#include <QSettings>
 
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent)
@@ -46,7 +47,9 @@ GameWidget::GameWidget(QWidget *parent)
     topLayout->addWidget(m_labelNivel);
 
     mainLayout->addLayout(topLayout);
+    mainLayout->addStretch();  // marcadores arriba, sobre el tablero
 
+    m_record = QSettings().value("record", 0).toInt();
     connect(&m_timer, &QTimer::timeout, this, &GameWidget::onTick);
     nuevoJuego();
 }
@@ -58,7 +61,7 @@ int GameWidget::intervaloTimer() const
 
 void GameWidget::actualizarUI()
 {
-    m_labelPuntos->setText(tr("Puntos: %1").arg(m_puntos));
+    m_labelPuntos->setText(tr("Puntos: %1  |  Récord: %2").arg(m_puntos).arg(qMax(m_puntos, m_record)));
     m_labelNivel->setText(tr("Nivel: %1").arg(m_nivel));
 }
 
@@ -81,6 +84,9 @@ void GameWidget::nuevoJuego()
         m_serpiente.append(QPoint(startX - i, startY));
 
     m_direccion = Derecha;
+    m_colaDirecciones.clear();
+    m_victoria = false;
+    m_esperando = true;
     m_puntos = 0;
     m_nivel = 1;
     m_juegoActivo = true;
@@ -106,9 +112,48 @@ void GameWidget::colocarComida()
         m_comida = vacias[QRandomGenerator::global()->bounded(vacias.size())];
 }
 
+void GameWidget::alternarPausa()
+{
+    if (!m_juegoActivo) return;
+    m_pausado = !m_pausado;
+    update();
+}
+
+// Cada giro se aplica en su propio tick y se valida contra la direccion
+// que tendra la serpiente en ese momento: asi dos teclas rapidas (p. ej.
+// arriba + izquierda yendo a la derecha) ya no la hacen chocar consigo misma.
+void GameWidget::encolarDireccion(Direccion d)
+{
+    Direccion ultima = m_colaDirecciones.isEmpty() ? m_direccion : m_colaDirecciones.last();
+    auto opuesta = [](Direccion a, Direccion b) {
+        return (a == Arriba && b == Abajo) || (a == Abajo && b == Arriba)
+            || (a == Izquierda && b == Derecha) || (a == Derecha && b == Izquierda);
+    };
+    if (d == ultima || opuesta(d, ultima)) return;
+    if (m_colaDirecciones.size() < 3)
+        m_colaDirecciones.enqueue(d);
+}
+
+void GameWidget::terminar(bool victoria)
+{
+    m_juegoActivo = false;
+    m_victoria = victoria;
+    m_timer.stop();
+    if (m_puntos > m_record) {
+        m_record = m_puntos;
+        QSettings().setValue("record", m_record);
+    }
+    actualizarUI();
+    emit juegoTerminado(m_puntos);
+    update();
+}
+
 void GameWidget::onTick()
 {
-    if (!m_juegoActivo || m_pausado) return;
+    if (!m_juegoActivo || m_pausado || m_esperando) return;
+
+    if (!m_colaDirecciones.isEmpty())
+        m_direccion = m_colaDirecciones.dequeue();
 
     QPoint cabeza = m_serpiente.first();
 
@@ -120,28 +165,32 @@ void GameWidget::onTick()
     }
 
     if (cabeza.x() < 0 || cabeza.x() >= ANCHO || cabeza.y() < 0 || cabeza.y() >= ALTO) {
-        m_juegoActivo = false;
-        m_timer.stop();
-        emit juegoTerminado(m_puntos);
-        update();
+        terminar(false);
         return;
     }
 
-    if (m_serpiente.contains(cabeza)) {
-        m_juegoActivo = false;
-        m_timer.stop();
-        emit juegoTerminado(m_puntos);
-        update();
-        return;
+    // La ultima casilla de la cola se libera en este mismo movimiento
+    // (salvo que coma), asi que perseguir la cola no es un choque.
+    const bool come = (cabeza == m_comida);
+    const int revisar = come ? m_serpiente.size() : m_serpiente.size() - 1;
+    for (int i = 0; i < revisar; ++i) {
+        if (m_serpiente[i] == cabeza) {
+            terminar(false);
+            return;
+        }
     }
 
     m_serpiente.prepend(cabeza);
 
-    if (cabeza == m_comida) {
+    if (come) {
         m_puntos += 10;
         actualizarNivel();
         actualizarUI();
         emit puntosCambiados(m_puntos);
+        if (m_serpiente.size() >= ANCHO * ALTO) {
+            terminar(true);  // tablero lleno
+            return;
+        }
         colocarComida();
     } else {
         m_serpiente.removeLast();
@@ -217,6 +266,16 @@ void GameWidget::paintEvent(QPaintEvent * /*event*/)
     painter.setBrush(QColor(255, 255, 255, 60));
     painter.drawEllipse(fx - 3, fy - 5, 5, 4);
 
+    if (m_esperando && m_juegoActivo && !m_pausado) {
+        painter.setPen(fg);
+        QFont font = painter.font();
+        font.setPixelSize(16);
+        font.setBold(true);
+        painter.setFont(font);
+        painter.drawText(QRect(0, TOP_BAR + ALTO * CELDA / 2 + 30, width(), 30), Qt::AlignCenter,
+                         tr("Pulsa una flecha (o WASD) para empezar"));
+    }
+
     if (m_pausado && m_juegoActivo) {
         painter.fillRect(rect(), QColor(0, 0, 0, 130));
         painter.setPen(fg);
@@ -240,13 +299,13 @@ void GameWidget::paintEvent(QPaintEvent * /*event*/)
         font.setPixelSize(32);
         font.setBold(true);
         painter.setFont(font);
-        painter.drawText(rect(), Qt::AlignCenter, tr("GAME OVER"));
+        painter.drawText(rect(), Qt::AlignCenter, m_victoria ? tr("¡GANASTE!") : tr("GAME OVER"));
 
         font.setPixelSize(16);
         font.setBold(false);
         painter.setFont(font);
         painter.drawText(rect().adjusted(0, 38, 0, 38), Qt::AlignCenter,
-                         tr("Puntuacion: %1  |  Nivel: %2").arg(m_puntos).arg(m_nivel));
+                         tr("Puntuación: %1  |  Nivel: %2  |  Récord: %3").arg(m_puntos).arg(m_nivel).arg(m_record));
 
         font.setPixelSize(13);
         painter.setFont(font);
@@ -258,10 +317,7 @@ void GameWidget::paintEvent(QPaintEvent * /*event*/)
 void GameWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_P || event->key() == Qt::Key_Escape) {
-        if (m_juegoActivo) {
-            m_pausado = !m_pausado;
-            update();
-        }
+        alternarPausa();
         return;
     }
 
@@ -274,23 +330,43 @@ void GameWidget::keyPressEvent(QKeyEvent *event)
     if (m_pausado) return;
 
     switch (event->key()) {
+    case Qt::Key_Up: case Qt::Key_W: case Qt::Key_Down: case Qt::Key_S:
+    case Qt::Key_Left: case Qt::Key_A: case Qt::Key_Right: case Qt::Key_D:
+        // La primera tecla arranca la partida (ir a la izquierda no es valido al inicio)
+        if (m_esperando && event->key() != Qt::Key_Left && event->key() != Qt::Key_A)
+            m_esperando = false;
+        break;
+    default:
+        break;
+    }
+
+    switch (event->key()) {
     case Qt::Key_Up:
     case Qt::Key_W:
-        if (m_direccion != Abajo) m_direccion = Arriba;
+        encolarDireccion(Arriba);
         break;
     case Qt::Key_Down:
     case Qt::Key_S:
-        if (m_direccion != Arriba) m_direccion = Abajo;
+        encolarDireccion(Abajo);
         break;
     case Qt::Key_Left:
     case Qt::Key_A:
-        if (m_direccion != Derecha) m_direccion = Izquierda;
+        encolarDireccion(Izquierda);
         break;
     case Qt::Key_Right:
     case Qt::Key_D:
-        if (m_direccion != Izquierda) m_direccion = Derecha;
+        encolarDireccion(Derecha);
         break;
     default:
         QWidget::keyPressEvent(event);
     }
+}
+
+void GameWidget::focusOutEvent(QFocusEvent *event)
+{
+    if (m_juegoActivo && !m_pausado && !m_esperando) {
+        m_pausado = true;
+        update();
+    }
+    QWidget::focusOutEvent(event);
 }

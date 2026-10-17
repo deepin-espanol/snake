@@ -1,3 +1,19 @@
+snake (0.3-1) unstable; urgency=medium
+
+  * Dos giros rapidos en el mismo tick (p. ej. arriba + izquierda yendo
+    a la derecha) invertian la serpiente y la mataban; ahora los giros
+    se encolan.
+  * Perseguir la propia cola ya no cuenta como choque (esa casilla se
+    libera en el mismo movimiento).
+  * Cada partida espera a la primera direccion: antes arrancaba sola y
+    chocaba con la pared si no se reaccionaba a tiempo.
+  * Record guardado entre partidas y victoria si se llena el tablero.
+  * Los marcadores aparecian en mitad del tablero y pegados al borde.
+  * Pausa automatica al perder el foco, opcion Pausa y Nuevo juego
+    (Ctrl+N) en el menu; Ctrl+Q sin abrir el menu.
+
+ -- Deepin en Español <developers@deepinenespanol.org>  Wed, 04 Nov 2026 18:00:00 +0000
+
 snake (0.2-1) unstable; urgency=medium
 
   * New version 0.2.

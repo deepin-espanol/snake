@@ -11,7 +11,9 @@ DWIDGET_USE_NAMESPACE
 int main(int argc, char *argv[])
 {
     DApplication a(argc, argv);
-    a.setOrganizationName("deepin en español");
+    a.setOrganizationName("deepinenespanol");
+    a.setApplicationName("snake");
+    a.setApplicationVersion("0.3");
 
     QTranslator appTranslator;
     QString locale = QLocale::system().name();
@@ -33,7 +35,7 @@ int main(int argc, char *argv[])
         "<span style=' font-size:8pt; font-weight:600;'>Deepin en Español </span>"
         "<a href='https://deepinenespanol.org'>https://deepinenespanol.org</a><br/>"
         "<span style=' font-size:8pt; font-weight:600;'>Deepin Latin Code - developers</span>");
-    dialog.setVersion(DApplication::buildVersion("Version 0.2"));
+    dialog.setVersion(DApplication::buildVersion(QStringLiteral("0.3")));
     dialog.setWebsiteName("deepinenespanol.org");
     dialog.setWebsiteLink("https://deepinenespanol.org");
 
