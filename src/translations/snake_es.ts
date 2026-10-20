@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="es">
 <context>
@@ -6,10 +6,6 @@
     <message>
         <source>Puntos: 0</source>
         <translation>Puntos: 0</translation>
-    </message>
-    <message>
-        <source>Puntos: %1</source>
-        <translation>Puntos: %1</translation>
     </message>
     <message>
         <source>Nivel: 1</source>
@@ -32,12 +28,24 @@
         <translation>GAME OVER</translation>
     </message>
     <message>
-        <source>Puntuacion: %1  |  Nivel: %2</source>
-        <translation>Puntuación: %1  |  Nivel: %2</translation>
-    </message>
-    <message>
         <source>Presiona Enter para reiniciar</source>
         <translation>Presiona Enter para reiniciar</translation>
+    </message>
+    <message>
+        <source>Puntos: %1  |  Récord: %2</source>
+        <translation>Puntos: %1  |  Récord: %2</translation>
+    </message>
+    <message>
+        <source>Pulsa una flecha (o WASD) para empezar</source>
+        <translation>Pulsa una flecha (o WASD) para empezar</translation>
+    </message>
+    <message>
+        <source>¡GANASTE!</source>
+        <translation>¡GANASTE!</translation>
+    </message>
+    <message>
+        <source>Puntuación: %1  |  Nivel: %2  |  Récord: %3</source>
+        <translation>Puntuación: %1  |  Nivel: %2  |  Récord: %3</translation>
     </message>
 </context>
 <context>
@@ -61,6 +69,10 @@
     <message>
         <source>Snake - Nivel %1</source>
         <translation>Snake - Nivel %1</translation>
+    </message>
+    <message>
+        <source>Pausa (P)</source>
+        <translation>Pausa (P)</translation>
     </message>
 </context>
 <context>

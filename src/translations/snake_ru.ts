@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="ru">
 <context>
@@ -6,10 +6,6 @@
     <message>
         <source>Puntos: 0</source>
         <translation>Очки: 0</translation>
-    </message>
-    <message>
-        <source>Puntos: %1</source>
-        <translation>Очки: %1</translation>
     </message>
     <message>
         <source>Nivel: 1</source>
@@ -32,12 +28,24 @@
         <translation>ИГРА ОКОНЧЕНА</translation>
     </message>
     <message>
-        <source>Puntuacion: %1  |  Nivel: %2</source>
-        <translation>Очки: %1  |  Уровень: %2</translation>
-    </message>
-    <message>
         <source>Presiona Enter para reiniciar</source>
         <translation>Нажмите Enter, чтобы начать заново</translation>
+    </message>
+    <message>
+        <source>Puntos: %1  |  Récord: %2</source>
+        <translation>Очки: %1  |  Рекорд: %2</translation>
+    </message>
+    <message>
+        <source>Pulsa una flecha (o WASD) para empezar</source>
+        <translation>Нажмите стрелку (или WASD), чтобы начать</translation>
+    </message>
+    <message>
+        <source>¡GANASTE!</source>
+        <translation>ПОБЕДА!</translation>
+    </message>
+    <message>
+        <source>Puntuación: %1  |  Nivel: %2  |  Récord: %3</source>
+        <translation>Очки: %1  |  Уровень: %2  |  Рекорд: %3</translation>
     </message>
 </context>
 <context>
@@ -61,6 +69,10 @@
     <message>
         <source>Snake - Nivel %1</source>
         <translation>Змейка - Уровень %1</translation>
+    </message>
+    <message>
+        <source>Pausa (P)</source>
+        <translation>Пауза (P)</translation>
     </message>
 </context>
 <context>

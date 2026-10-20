@@ -3,7 +3,7 @@ version: "1"
 package:
   id: org.deepinenespanol.snake
   name: "Snake"
-  version: 0.2.0.0
+  version: 0.3.0.0
   kind: app
   description: |
     Classic Snake game for Deepin desktop
