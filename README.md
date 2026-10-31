@@ -1,42 +1,58 @@
 # Snake
 
-Juego clasico Snake desarrollado con Qt6 y Deepin Tool Kit (DTK6) para Deepin Linux.
+La viborita clásica: come, crece y no choques. Desarrollado con **Qt6** y **Deepin Tool Kit (DTK6)** para Deepin Linux.
 
-## Caracteristicas
+## Características
 
-- Movimiento fluido con flechas o WASD
-- Puntuacion por cada fruta comida (+10 puntos)
-- Game Over al chocar paredes o con ella misma
+- Niveles: la velocidad aumenta cada 50 puntos
+- Récord guardado
+- Cada partida espera a tu primera dirección
+- Giros rápidos fiables (se encolan, ya no te hacen chocar contigo mismo)
+- Traducido a 8 idiomas
 
-## Dependencias
+## Controles
 
-```bash
-sudo apt install qt6-base-dev libdtk6widget-dev cmake g++
-```
+| Tecla | Acción |
+|-------|--------|
+| Flechas / WASD | Dirección (la primera inicia la partida) |
+| P / Esc | Pausa |
+| Enter | Reiniciar tras perder |
+| Ctrl+N | Nuevo juego |
+| Ctrl+Q | Salir |
+
+## Instalación
+
+Descarga el paquete de la [última release](https://github.com/deepin-espanol/snake/releases/latest):
+
+- `.deb` (amd64, arm64, riscv64, loong64):
+  ```bash
+  sudo apt install ./snake_*.deb
+  ```
+- `.uab` de linyaps (amd64, arm64): ejecutable directamente.
+  ```bash
+  chmod +x org.deepinenespanol.*.uab && ./org.deepinenespanol.*.uab
+  ```
 
 ## Compilar
 
 ```bash
-mkdir build && cd build
-cmake ..
-make
+sudo apt build-dep ./          # dependencias declaradas en debian/control
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+./build/snake
 ```
 
-## Ejecutar
+O generar el paquete `.deb`:
 
 ```bash
-./snake
+dpkg-buildpackage -us -uc -b
 ```
 
-O si se instalo globalmente:
+## Publicar una versión
 
-```bash
-sudo make install
-snake
-```
+Añade una entrada nueva en `debian/changelog` y haz push: el workflow
+*Build and publish .deb* crea la release con los `.deb` y los `.uab`.
 
-## Controles
+## Licencia
 
-| Tecla | Accion |
-|-------|--------|
-| `Flechas` o `WASD` | Mover serpiente |
+GPL-3.0 o posterior. © Deepin en Español — https://deepinenespanol.org
