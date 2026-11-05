@@ -1,10 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect x="4" y="4" width="120" height="120" rx="20" ry="20" fill="#1e1e1e"/>
-  <circle cx="28" cy="28" r="11" fill="#3ddc68"/>
-  <circle cx="25" cy="25" r="2.5" fill="#1e1e1e"/>
-  <circle cx="32" cy="25" r="2.5" fill="#1e1e1e"/>
-  <path d="M 36 36 Q 30 56 46 56 Q 62 56 62 72 Q 62 88 46 88 Q 30 88 30 104 L 98 104" fill="none" stroke="#3ddc68" stroke-width="12" stroke-linecap="round"/>
-  <rect x="90" y="96" width="16" height="16" rx="4" fill="#ff5050"/>
-  <rect x="93" y="99" width="5" height="5" rx="2" fill="#ffffff" opacity="0.6"/>
-  <rect x="84" y="92" width="4" height="10" rx="2" fill="#64a832"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#20352a"/>
+      <stop offset="100%" stop-color="#0f1c15"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7ef08f"/>
+      <stop offset="100%" stop-color="#22a447"/>
+    </linearGradient>
+    <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse" x="8" y="8">
+      <path d="M16 0H0V16" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="url(#bg)"/>
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="url(#grid)"/>
+  <!-- Cuerpo en S, de la cola (abajo izquierda) a la cabeza (arriba derecha) -->
+  <path d="M24 100 H72 Q88 100 88 84 Q88 68 72 68 H52 Q36 68 36 52 Q36 36 52 36 H80"
+        fill="none" stroke="#0d3b1b" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.55" transform="translate(0 2)"/>
+  <path d="M24 100 H72 Q88 100 88 84 Q88 68 72 68 H52 Q36 68 36 52 Q36 36 52 36 H80"
+        fill="none" stroke="url(#body)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 100 H72 Q88 100 88 84 Q88 68 72 68 H52 Q36 68 36 52 Q36 36 52 36 H80"
+        fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+  <!-- Cabeza -->
+  <ellipse cx="84" cy="36" rx="13" ry="11" fill="#3fcf62"/>
+  <circle cx="88" cy="31" r="3.4" fill="#ffffff"/><circle cx="89" cy="31" r="1.7" fill="#102016"/>
+  <circle cx="88" cy="41" r="3.4" fill="#ffffff"/><circle cx="89" cy="41" r="1.7" fill="#102016"/>
+  <path d="M96 36 h7 l3 -3 M103 36 l3 3" stroke="#ff4d5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Manzana -->
+  <circle cx="104" cy="96" r="11" fill="#e8343f"/>
+  <circle cx="100" cy="92" r="3" fill="#ffffff" fill-opacity="0.5"/>
+  <path d="M104 85 q1 -6 6 -7" stroke="#6b4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="109" cy="81" rx="4" ry="2" fill="#5ccf6a" transform="rotate(-30 109 81)"/>
 </svg>
