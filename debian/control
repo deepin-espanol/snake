@@ -1,7 +1,7 @@
 Source: snake
 Section: games
 Priority: optional
-Maintainer: Deepin en Español <developers@deepinenespanol.org>
+Maintainer: Alvaro Samudio <alvarosamudio@protonmail.com>
 Build-Depends: debhelper-compat (= 13),
                cmake,
                qt6-base-dev,
@@ -14,7 +14,7 @@ Rules-Requires-Root: no
 
 Package: snake
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, hicolor-icon-theme
 Description: Classic Snake game for Deepin desktop
  A classic Snake implementation built with Qt6 and DTK6,
  featuring smooth movement, levels and full
